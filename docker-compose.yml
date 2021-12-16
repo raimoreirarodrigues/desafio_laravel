@@ -1,0 +1,15 @@
+version: '2'
+services:
+  desafio:
+    container_name: desafio
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+     - "8000:80"
+    tty: true
+    environment:
+      TERM: xterm
+    volumes:
+     - ./:/opt/desafio
+    command: php artisan serve --host=0.0.0.0 --port=80
