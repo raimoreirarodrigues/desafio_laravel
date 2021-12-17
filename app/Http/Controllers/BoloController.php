@@ -32,15 +32,6 @@ class BoloController extends Controller
         return new BoloCollection(Bolo::get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -51,27 +42,13 @@ class BoloController extends Controller
     public function store(Request $request)
     {
         try{
-           //Valida dados:nome,peso, valor e quantidade
-           $this->service->validateBolo($request->all());
            $this->service->create($request->all());            
            return response()->json(['msg'=>'Bolo cadastrado com sucesso!','status'=>201],201);
         }catch(InvalidArgumentException $e){
             return response()->json(['msg'=>$e->getMessage(),'status'=>400],400);
         }catch(Exception $e){
-           
             return response()->json(['msg'=>'Não foi possível realizar o cadastro do bolo','status'=>500],500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -85,10 +62,7 @@ class BoloController extends Controller
         try{
             return new BoloResource(Bolo::findOrFail($id));
         }catch(Exception $e){
-            return response()->json([
-                'msg'=>'Nenhum bolo encontrado',
-                'status'=>404
-            ],404);
+            return response()->json(['msg'=>'Nenhum bolo encontrado','status'=>404],404);
         }
        
     }
@@ -102,7 +76,14 @@ class BoloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $this->service->update($request->all(),$id);            
+            return response()->json(['msg'=>'Bolo atualizado com sucesso!','status'=>201],201);
+         }catch(InvalidArgumentException $e){
+             return response()->json(['msg'=>$e->getMessage(),'status'=>400],400);
+         }catch(Exception $e){
+             return response()->json(['msg'=>'Não foi possível realizar a atualização do bolo','status'=>500],500);
+         }
     }
 
     /**
@@ -113,6 +94,11 @@ class BoloController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $this->service->delete($id);            
+            return response()->json(['msg'=>'Bolo deletado com sucesso!','status'=>201],201);
+         }catch(Exception $e){
+             return response()->json(['msg'=>'Não foi possível realizar a exclusão do bolo','status'=>500],500);
+         }
     }
 }

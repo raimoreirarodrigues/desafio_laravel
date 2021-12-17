@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1', 'middleware' => ['api']], function () {
     Route::get('bolo','App\Http\Controllers\BoloController@index');
     Route::post('bolo','App\Http\Controllers\BoloController@store');
-    Route::get('bolo/{id}','App\Http\Controllers\BoloController@edit');
+    Route::get('bolo/{id}/edit','App\Http\Controllers\BoloController@edit');
     Route::put('bolo/{id}','App\Http\Controllers\BoloController@update');
-    Route::delete('bolo/{id}','App\Http\Controllers\BoloController@index');
+    Route::delete('bolo/{id}','App\Http\Controllers\BoloController@destroy');
 });
