@@ -18,8 +18,9 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
-            h3 {color:#fff;font-size: 30pt;}
-            h4 {color:#fff;font-size: 20pt;}
+            h3 {color:#fff;text-align:center;font-size: 30pt;}
+            h4 {color:#fff;text-align:center;font-size: 20pt;}
+            h5 {color:#fff;text-align:center;font-size: 20pt;}
         </style>
     </head>
     <body class="antialiased">
@@ -27,6 +28,7 @@
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <h3>Desafio Bolo</h3>
                 <h4>Projeto em Execução</h4>
+                <h5><a href="/api/v1/bolo/" target="_blank">(Clique aqui)</a> para ver a lista de bolos</h5>
             </div>
         </div>
     </body>

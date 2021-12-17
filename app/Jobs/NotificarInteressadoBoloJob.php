@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\DecrementaQuantidadeBoloEvent;
+use App\Mail\SendMailNotificarInteressadoBolo;
 use App\Models\BoloInteressado;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use \Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class NotificarInteressadoBoloJob implements ShouldQueue
 {
@@ -42,6 +44,7 @@ class NotificarInteressadoBoloJob implements ShouldQueue
             //Verifica novamente se existe quantidade para envio de notificação
             if($interessado->bolo->quantidade>0){
                 Log::info('Enviando notificação para: '.$interessado->email);
+                Mail::to($interessado->email)->send(new SendMailNotificarInteressadoBolo($interessado->bolo->nome));
                 $interessado->notificado = true;
                 $interessado->save();
                 //Diminui a quantidade de bolo disponível

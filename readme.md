@@ -32,6 +32,10 @@ Configure o banco de dados MySQL através do link:
 
     07-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
 
+    Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 02 e, em seguida, executar:
+
+    php artisan queue:listen --queue=notificar_interessado_bolo --timeout=0 --tries=4
+
 ### Endpoints
 
     O projeto em questão possui os seguintes endpoints:
@@ -60,3 +64,6 @@ Configure o banco de dados MySQL através do link:
         [DELETE] api/v1/bolo/:id
         (Deleta os dados de um bolo específico)
 
+## Operação
+
+    O sistema verifica a cada 5(cinco) minutos (através de um schedule) os bolos que estão disponíveis (quantidade >0) e suas respectivas listas de interessados que ainda não foram notificados. Gera-se, então, uma fila de notificações, sendo que cada interessado receberá por e-mail uma notificação que seu bolo está disponível.
