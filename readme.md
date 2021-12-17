@@ -7,48 +7,51 @@ Configure o banco de dados MySQL através do link:
 
 ### Instalação:
 
-    01-)Entre no diretório desafio_laravel
+    01-)Clone o repositório
+    git clone https://github.com/raimoreirarodrigues/desafio_laravel.git
+
+    02-)Entre no diretório desafio_laravel
     
     cd desafio_laravel
     
-    02-)Execute o comando para criação do container:
+    03-)Execute o comando para criação do container:
     
     docker-compose build --no-cache
     
-    03-)Rode o comando para instalar as dependências do projeto:
+    04-)Rode o comando para instalar as dependências do projeto:
     
     docker-compose run desafio php -d memory_limit=-1 /usr/local/bin/composer install
 
-    04-)Execute o container com o comando:
+    05-)Execute o container com o comando:
 
     docker-compose up -d
     
-    05-)Entre no ambiente docker através do comando:
+    06-)Entre no ambiente docker através do comando:
     
     sudo docker exec -it desafio bash
     
-    06-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
+    07-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
     
     chmod 777 .env.example
     cp .env.example .env
     
-    07-)Execute os comandos em sequência para dar permissão aos diretórios:
+    08-)Execute os comandos em sequência para dar permissão aos diretórios:
     
     chmod 777 -R storage/framework
     chmod 777 -R storage/logs
     chmod 777 -R storage/app
     chmod 777 -R bootstrap/cache
     
-    08-)Gere uma key com o seguinte comando:
+    09-)Gere uma key com o seguinte comando:
     
     php artisan key:generate
 
-    09-)Execute os seguintes comandos em sequência para geração das tabelas:
+    10-)Execute os seguintes comandos em sequência para geração das tabelas:
     
     php artisan migrate:install
     php artisan migrate
 
-    10-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
+    11-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
 
     Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 02 e, em seguida, executar:
 
