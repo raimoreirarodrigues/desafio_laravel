@@ -7,30 +7,36 @@ Configure o banco de dados MySQL através do link:
 
 ### Instalação:
 
-    01-)Execute o comando para criação do container:
+    01-)Entre no diretório desafio_laravel
+        cd desafio_laravel
+    
+    02-)Execute o comando para criação do container:
         docker-compose build --no-cache
     
-    02-)Entre no ambiente docker através do comando:
+    03-)Rode o comando para instalar as dependências do projeto:
+    docker-compose run desafio php -d memory_limit=-1 /usr/local/bin/composer install
+    
+    04-)Entre no ambiente docker através do comando:
         sudo docker exec -it desafio bash
     
-    03-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
+    05-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
         chmod 777 .env.example
         cp .env.example .env
     
-    04-)Execute os comandos em sequência para dar permissão aos diretórios:
+    06-)Execute os comandos em sequência para dar permissão aos diretórios:
         chmod 777 -R storage/framework
         chmod 777 -R storage/logs
         chmod 777 -R storage/app
         chmod 777 -R bootstrap/cache
     
-    05-)Gere uma key com o seguinte comando:
+    07-)Gere uma key com o seguinte comando:
         php artisan key:generate
 
-    06-)Execute os seguintes comandos em sequência para geração das tabelas:
+    08-)Execute os seguintes comandos em sequência para geração das tabelas:
         php artisan migrate:install
         php artisan migrate
 
-    07-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
+    09-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
 
     Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 02 e, em seguida, executar:
 

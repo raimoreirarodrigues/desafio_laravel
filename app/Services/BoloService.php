@@ -51,7 +51,7 @@ class BoloService{
             DB::beginTransaction();
             $bolo = Bolo::findOrFail($id);
             $bolo->update($data);
-            $remove_emails = BoloInteressado::where('bolo_id',$bolo->id)->pluck('id')->toArray();
+            $remove_emails = BoloInteressado::where('bolo_id',$bolo->id)->limit(500)->pluck('id')->toArray();
             if(isset($data['interessados'])){
                 foreach ($data['interessados'] as $interessado_email) {
                    $bolo_interessado = BoloInteressado::where('email',$interessado_email)->where('bolo_id',$bolo->id)->first();
