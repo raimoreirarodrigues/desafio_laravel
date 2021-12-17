@@ -21,7 +21,7 @@ Configure o banco de dados MySQL através do link:
 
     04-)Execute o container com o comando:
 
-    docker-composer up -d
+    docker-compose up -d
     
     05-)Entre no ambiente docker através do comando:
     
