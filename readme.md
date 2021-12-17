@@ -85,6 +85,29 @@ Configure o banco de dados MySQL através do link:
         [DELETE] api/v1/bolo/:id
         (Deleta os dados de um bolo específico)
 
+     Endpoints - Interessados associados ao bolo
+
+       [GET]  api/v1/bolointeressado/{bolo_id}
+       (Retorna a lista de interessados no bolo em questão)
+
+       [POST]  api/v1/bolointeressado/{bolo_id}
+       (Associa uma nova lista de interessados ao bolo em questão)
+        Ex: 
+           {
+               "interessados":["interessado01@dominio.com.br","interessado02@dominio.com.br","interessado02@dominio.com.br"]
+           }
+        
+       [GET]  api/v1/bolointeressado/:bolo_interessado_id/edit
+       (Retorna os dados de um interessado específico para que seja possível atualizá-lo)
+
+       [PUT] api/v1/bolointeressado/:bolo_interessado_id
+       (Atualiza os dados de um interessado específico associado ao bolo)
+
+       [DELETE] api/v1/bolointeressado/:bolo_interessado_id
+       (Deleta os dados de um interessado específico associado ao bolo)
+
+
+
 ## Operação
 
     O sistema verifica a cada 5(cinco) minutos (através de um schedule) os bolos que estão disponíveis (quantidade >0) e suas respectivas listas de interessados que ainda não foram notificados. Gera-se, então, uma fila de notificações, sendo que cada interessado receberá por e-mail uma notificação que seu bolo está disponível.

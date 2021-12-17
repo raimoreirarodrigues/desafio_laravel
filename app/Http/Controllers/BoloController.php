@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BoloCollection;
-use App\Http\Resources\BoloResource;
-use App\Models\Bolo;
-use App\Models\BoloInteressado;
 use App\Services\BoloService;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,18 +23,33 @@ class BoloController extends Controller
         $this->service = $service;
     }
 
+     /**
+     * Método para listar todos os bolos e seus interessados salvos no banco
+     * @return ResponseJson: o retorno pode ser de duas formas:
+     *  1-)Array com dados: caso haja dados salvos no banco de dados
+     *  2-)Array vazio: caso não haja dados no banco de dados
+     */
+
     public function index()
     {
-        return new BoloCollection(Bolo::get());
+       return $this->service->indexBolo();
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     /**
+     * Método para registrar no banco um novo bolo com e-mails de interessados associados.
+     * @param nome         (required|string|unique) nome do bolo
+     * @param peso         (required|numeric|between:0,999999.99) peso do bolo (em gramas)
+     * @param valor        (required|numeric|between:0,999999999.99) valor do bolo
+     * @param quantidade   (nullable|integer) quantidade disponível (default=0)
+     * @param interessados (nullable|array) lista de e-mails dos interessados
+     * @return ResponseJson: o retorno pode ser de duas formas:
+     *  1-)Sucesso: caso os dados sejam salvos corretamente no banco de dados
+     *  2-)Error:
+     *    a-)Exceção InvalidArgumentException: quando o sistema identifica que um ou mais valores estão incorretos, de acordo com a validação
+     *    b-)Exceção Genérica Exception: quando o sistema tenta cadastrar os dados no banco, porém, ocorre algum erro não previsto
      */
+
     public function store(Request $request)
     {
         try{
@@ -52,28 +63,37 @@ class BoloController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Método para buscar um bolo específico juntamente com seus interessados
+     * @param id (integer) id do bolo registrado no banco de dados
+     * @return ResponseJson: o retorno pode ser de duas formas:
+     *  1-)Sucesso: os dados do bolo específico com seus interessados
+     *  2-)Error:
+     *    a-)Exceção Genérica Exception: quando o sistema não encontra o bolo a partir do id enviado
      */
+
     public function edit($id)
     {
         try{
-            return new BoloResource(Bolo::findOrFail($id));
+            return $this->service->editBolo($id);
         }catch(Exception $e){
-            return response()->json(['msg'=>'Nenhum bolo encontrado','status'=>404],404);
+            return response()->json(['msg'=>$e->getMessage(),'status'=>404],404);
         }
-       
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     /**
+     * Método para atualizar um bolo específico com e-mails de interessados associados.
+     * @param nome         (required|string|unique) nome do bolo
+     * @param peso         (required|numeric|between:0,999999.99) peso do bolo (em gramas)
+     * @param valor        (required|numeric|between:0,999999999.99) valor do bolo
+     * @param quantidade   (nullable|integer) quantidade disponível (default=0)
+     * @param interessados (nullable|array) lista de e-mails dos interessados (novos ou antigos). Obs: Se um ou mais interessado(s) que estava(m) salvos não for(rem) passado na atualização, os mesmos são excluídos(sync)
+     * @return ResponseJson: o retorno pode ser de duas formas:
+     *  1-)Sucesso: caso os dados sejam atualizados corretamente no banco de dados
+     *  2-)Error:
+     *     a-)Exceção InvalidArgumentException: quando o sistema identifica que um ou mais valores estão incorretos, de acordo com a validação
+     *     b-)Exceção Genérica Exception: quando o sistema tenta atualizar os dados no banco, porém, ocorre algum erro não previsto
      */
+
     public function update(Request $request, $id)
     {
         try{
@@ -86,12 +106,16 @@ class BoloController extends Controller
          }
     }
 
+    
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Método para excluir um bolo específico juntamente com seus interessados
+     * @param id (integer) id do bolo registrado no banco de dados
+     * @return ResponseJson: o retorno pode ser de duas formas:
+     *  1-)Sucesso: se os dados forem excluídos corretamente.
+     *  2-)Error:
+     *    a-)Exceção Genérica Exception: quando o sistema tenta excluir os dados no banco, porém, ocorre algum erro não previsto
      */
+
     public function destroy($id)
     {
         try{

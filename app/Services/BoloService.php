@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Resources\BoloCollection;
+use App\Http\Resources\BoloInteressadoCollection;
+use App\Http\Resources\BoloInteressadoResource;
+use App\Http\Resources\BoloResource;
 use App\Jobs\NotificarInteressadoBoloJob;
 use App\Models\Bolo;
 use App\Models\BoloInteressado;
+use App\Validators\BoloInteressadoValidator;
 use App\Validators\BoloValidator;
 use Carbon\Carbon;
 use Exception;
@@ -15,12 +20,8 @@ use \Illuminate\Support\Facades\Log;
 
 class BoloService{
 
-    public function validateBolo($data,$id=null){
-        $rules = App::make(BoloValidator::class)->getRules($data,$id);
-        $validator =  \Validator::make($data,$rules);
-        if ($validator->fails()) { 
-            throw new InvalidArgumentException($validator->messages());
-        }
+    public function indexBolo(){
+        return  new BoloCollection(Bolo::get());
     }
 
     public function create($data){
@@ -30,9 +31,7 @@ class BoloService{
             DB::beginTransaction();
             $bolo = Bolo::create($data);
             if(isset($data['interessados'])){
-               foreach ($data['interessados'] as $interessado_email) {
-                 $bolo->interessados()->save(new BoloInteressado(['email'=>$interessado_email]));
-               }
+               $this->associarEmailsBolo($bolo,$data['interessados']);
             }
             DB::commit();
         }catch(InvalidArgumentException $e){
@@ -41,6 +40,14 @@ class BoloService{
            DB::rollBack();
            Log::error($e->getMessage());
            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function editBolo($id){
+        try{
+            return new BoloResource(Bolo::findOrFail($id));
+        }catch(Exception $e){
+            throw new Exception('Nenhum bolo encontrado');
         }
     }
 
@@ -93,6 +100,65 @@ class BoloService{
         }
     }
 
+    public function indexBoloInteressadosBolo($bolo_id){
+        return new BoloInteressadoCollection(BoloInteressado::where('bolo_id',$bolo_id)->get());
+    }
+
+    public function addInteressadosBolo($data,$bolo_id){
+        try{
+            //Valida dados:nome,peso, valor e quantidade
+            $this->validateAssociarListaBolo($data);
+            DB::beginTransaction();
+            $bolo = Bolo::findOrFail($bolo_id);
+            if(isset($data['interessados'])){
+              $this->associarEmailsBolo($bolo,$data['interessados']);
+            }
+            DB::commit();
+        }catch(InvalidArgumentException $e){
+            throw new InvalidArgumentException($e->getMessage());
+         }catch(Exception $e){
+           DB::rollBack();
+           Log::error($e->getMessage());
+           throw new Exception($e->getMessage());
+        }
+    }
+
+    public function editBoloInteressado($bolo_interessado_id){
+        try{
+           return new BoloInteressadoResource(BoloInteressado::findOrFail($bolo_interessado_id));
+        }catch(Exception $e){
+           throw new Exception('Interessado associado ao bolo não encontrado');
+        }
+    }
+
+    public function updateBoloInteressado($data,$bolo_interessado_id){
+        try{
+            DB::beginTransaction();
+            $bolo_interessado = BoloInteressado::findOrFail($bolo_interessado_id);
+            $bolo_interessado->update($data);
+            DB::commit();
+        }catch(InvalidArgumentException $e){
+            throw new InvalidArgumentException($e->getMessage());
+         }catch(Exception $e){
+           DB::rollBack();
+           Log::error($e->getMessage());
+           throw new Exception($e->getMessage());
+        }
+    }
+
+    public function deleteBoloInteressado($bolo_interessado_id){
+        try{
+            DB::beginTransaction();
+            BoloInteressado::findOrFail($bolo_interessado_id)->delete();
+            DB::commit();
+        }catch(Exception $e){
+           DB::rollBack();
+           Log::error($e->getMessage());
+           throw new Exception($e->getMessage());
+        }
+    }
+    
+    //Disparado pelo Evento DecrementaQuantidadeBoloEvent
     public function notificarInteressados(){
         //Busca bolos onde a quantidade > 0
         $bolos_disponiveis = Bolo::where('quantidade','>',0)->pluck('id');
@@ -113,6 +179,32 @@ class BoloService{
             DB::commit();
         }catch(Exception $e){
             throw new Exception($e->getMessage());
+        }
+    }
+
+    private function associarEmailsBolo($bolo,$emails){
+        foreach ($emails as $interessado_email) {
+            $bolo->interessados()->save(new BoloInteressado(['email'=>$interessado_email]));
+          }
+    }
+
+    //Validações - Bolo
+
+    public function validateBolo($data,$id=null){
+        $rules = App::make(BoloValidator::class)->getRules($data,$id);
+        $validator =  \Validator::make($data,$rules);
+        if ($validator->fails()) { 
+            throw new InvalidArgumentException($validator->messages());
+        }
+    }
+
+     //Validações - Bolo / Interessados
+
+    public function validateAssociarListaBolo($data,$id=null){
+        $rules = App::make(BoloInteressadoValidator::class)->getRules($data,$id);
+        $validator =  \Validator::make($data,$rules);
+        if ($validator->fails()) { 
+            throw new InvalidArgumentException($validator->messages());
         }
     }
 }

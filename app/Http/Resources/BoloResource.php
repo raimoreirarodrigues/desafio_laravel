@@ -19,6 +19,7 @@ class BoloResource extends JsonResource
             'nome' => $this->nome,
             'peso' => $this->peso,
             'quantidade' => $this->quantidade,
+            'valor'=>$this->valor,
             'interessados'=>BoloInteressadoResource::collection($this->interessados),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
