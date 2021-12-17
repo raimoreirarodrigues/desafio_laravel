@@ -23,32 +23,32 @@ Configure o banco de dados MySQL através do link:
 
     docker-composer up -d
     
-    04-)Entre no ambiente docker através do comando:
+    05-)Entre no ambiente docker através do comando:
     
     sudo docker exec -it desafio bash
     
-    05-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
+    06-)Faça uma cópia do arquivo .env.example com o nome de .env e verifique se os dados de acesso ao banco estão corretos:
     
     chmod 777 .env.example
     cp .env.example .env
     
-    06-)Execute os comandos em sequência para dar permissão aos diretórios:
+    07-)Execute os comandos em sequência para dar permissão aos diretórios:
     
     chmod 777 -R storage/framework
     chmod 777 -R storage/logs
     chmod 777 -R storage/app
     chmod 777 -R bootstrap/cache
     
-    07-)Gere uma key com o seguinte comando:
+    08-)Gere uma key com o seguinte comando:
     
     php artisan key:generate
 
-    08-)Execute os seguintes comandos em sequência para geração das tabelas:
+    09-)Execute os seguintes comandos em sequência para geração das tabelas:
     
     php artisan migrate:install
     php artisan migrate
 
-    09-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
+    10-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
 
     Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 02 e, em seguida, executar:
 
