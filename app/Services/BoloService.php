@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Jobs\NotificarInteressadoBoloJob;
 use App\Models\Bolo;
 use App\Models\BoloInteressado;
 use App\Validators\BoloValidator;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\App;
 use InvalidArgumentException;
@@ -88,6 +90,29 @@ class BoloService{
            DB::rollBack();
            Log::error($e->getMessage());
            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function notificarInteressados(){
+        //Busca bolos onde a quantidade > 0
+        $bolos_disponiveis = Bolo::where('quantidade','>',0)->pluck('id');
+        //Busca por interessados que ainda não foram notificados
+        $interessados_nao_notificados = BoloInteressado::whereIn('bolo_id',$bolos_disponiveis)->where('notificado','0')->get();
+        foreach($interessados_nao_notificados as $interessado){
+            //Cria uma fila para disparo de e-mails aos interessados
+            NotificarInteressadoBoloJob::dispatch($interessado->id)->onQueue('notificar_interessado_bolo')->delay(Carbon::now()->addSeconds(10));
+        }
+    }
+
+    public function decrementarBolo($bolo_id){
+        try{
+            DB::beginTransaction();
+            $bolo = Bolo::find($bolo_id);
+            $bolo->quantidade = $bolo->quantidade-1;
+            $bolo->save();
+            DB::commit();
+        }catch(Exception $e){
+            throw new Exception($e->getMessage());
         }
     }
 }

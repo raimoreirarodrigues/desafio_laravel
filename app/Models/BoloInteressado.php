@@ -18,7 +18,7 @@ class BoloInteressado extends Model
     protected $fillable = ['email','notificado','bolo_id'];
 
     public function bolo(){
-        return $this->belongsTo(Bolo::class, 'id', 'bolo_id');
+        return $this->belongsTo(Bolo::class);
     }
  
 }
