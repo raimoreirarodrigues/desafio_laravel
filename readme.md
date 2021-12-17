@@ -53,7 +53,7 @@ Configure o banco de dados MySQL através do link:
 
     11-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
 
-    Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 02 e, em seguida, executar:
+    Nota: para executar o JOB de envio de notificações aos interessados, executar o passo 06 e, em seguida, executar:
 
     php artisan queue:listen --queue=notificar_interessado_bolo --timeout=0 --tries=4
 
