@@ -16,15 +16,15 @@ Configure o banco de dados MySQL através do link:
     
     03-)Execute o comando para criação do container:
     
-    docker-compose build --no-cache
+    sudo docker-compose build --no-cache
     
     04-)Rode o comando para instalar as dependências do projeto:
     
-    docker-compose run desafio php -d memory_limit=-1 /usr/local/bin/composer install
+    sudo docker-compose run desafio php -d memory_limit=-1 /usr/local/bin/composer install
 
     05-)Execute o container com o comando:
 
-    docker-compose up -d
+    sudo docker-compose up -d
     
     06-)Entre no ambiente docker através do comando:
     
@@ -51,12 +51,36 @@ Configure o banco de dados MySQL através do link:
     php artisan migrate:install
     php artisan migrate
 
-    11-)Abra seu navegador de preferência e digite localhost:8000 e verifique se o projeto está em funcionamento.
+    11-)Para testar se a aplicação está em execução, abra seu navegador de preferência e digite localhost:8000 e verifique 
+    se o projeto está em funcionamento.
 
-    Nota: caso deseje testar a execução do JOB de envio de notificações aos interessados, executar o passo 06 e, em seguida, executar:
+    Nota: caso deseje testar a execução do JOB de envio de notificações aos interessados, executar o passo 06 e, em seguida,
+    executar:
 
     php artisan teste:notificarinteressados
     php artisan queue:listen --queue=notificar_interessado_bolo --timeout=0 --tries=4
+
+
+### Testes Unitários
+
+    Caso deseje testar as operações básicas (Listar,Criar,Editar,Atualizar e Deletar), pode-se utilizar os testes com PHPUnit.
+    Para tanto, basta executar um dos códigos da lista a seguir:
+
+    [LISTAR] vendor/bin/phpunit --filter=BoloListTest
+    (Testa a aplicação para verificar se a mesma está retornando o status 200 quando solicitada a lista de bolos cadastrados)
+
+    [CRIAR] vendor/bin/phpunit --filter=BoloCreateTest
+    (Testa a aplicação para verificar se a mesma está cadastrando um item no banco e retornando o status 201)
+
+    [EDITAR] vendor/bin/phpunit --filter=BoloEditTest
+    (Testa a aplicação para verificar se a mesma está retornando um item específico para edição com status 200)
+
+    [ATUALIZAR] vendor/bin/phpunit --filter=BoloUpdateTest
+    (Testa a aplicação para verificar se a mesma está atualizando um item específico e retornando o status 201)
+
+    [DELETAR] vendor/bin/phpunit --filter=BoloDeleteTest
+    (Testa a aplicação para verificar se a mesma está excluindo um item específico e retornando o status 200)
+
 
 ### Endpoints
 

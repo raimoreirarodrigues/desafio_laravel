@@ -120,7 +120,7 @@ class BoloController extends Controller
     {
         try{
             $this->service->delete($id);            
-            return response()->json(['msg'=>'Bolo deletado com sucesso!','status'=>201],201);
+            return response()->json(['msg'=>'Bolo deletado com sucesso!','status'=>200],200);
          }catch(Exception $e){
              return response()->json(['msg'=>'Não foi possível realizar a exclusão do bolo','status'=>500],500);
          }
